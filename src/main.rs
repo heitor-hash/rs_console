@@ -151,20 +151,42 @@ fn main_calculator() {
     println!("2: subtração");
     println!("3: multiplicação");
     println!("4: divisão");
+    println!("5: raiz quadrada");
 
     let mut operador: String = String::new();
     io::stdin()
         .read_line(&mut operador)
         .expect("Failed to read operator");
     let operador = operador.trim().parse::<u8>().unwrap();
+    let input2: f64;
     match operador {
         0 => {
             // error, return
             println!("Please enter a valid operator");
             return;
         }
-        1..=4 => (),
-        // from 5 to above, error, return
+        1..=4 => {
+            println!("Digite outro número");
+
+            let mut input: String = String::new();
+            io::stdin()
+                .read_line(&mut input)
+                .expect("Failed to read number");
+            match input.trim().parse::<f64>() {
+                Ok(num) => {
+                    input2 = num;
+                }
+                Err(err) => {
+                    println!("Erro: {err}");
+                    return;
+                }
+            }
+        }
+        5 => {
+            let res: f64 = f64::sqrt(input1);
+            println!("Resposta: {res:.5}");
+            return;
+        } // from 5 to above, error, return
         _ => {
             println!("Please enter a valid operator");
             return;
@@ -174,23 +196,6 @@ fn main_calculator() {
     // Para editar no futuro,
     // aqui será para operações
     // com um unico número
-
-    println!("Digite outro número");
-
-    let mut input: String = String::new();
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read number");
-    let input2: f64;
-    match input.trim().parse::<f64>() {
-        Ok(num) => {
-            input2 = num;
-        }
-        Err(err) => {
-            println!("Erro: {err}");
-            return;
-        }
-    }
 
     // Aqui será para operações
     // com dois números
@@ -216,6 +221,7 @@ fn main_calculator() {
                 println!("Erro divisão por 0")
             }
         }
+
         _ => (),
     }
     // wait a bit to let the user see the answear:
