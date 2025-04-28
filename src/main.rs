@@ -4,7 +4,7 @@ use std::io::{self};
 fn rng_game(mut rng: ThreadRng) {
     let mut lo_str: String = String::new();
     let mut hi_str: String = String::new();
-    println!("Enter the range lower part");
+    println!("Digite o minimo");
     io::stdin()
         .read_line(&mut lo_str)
         .expect("Error reading line");
@@ -18,7 +18,7 @@ fn rng_game(mut rng: ThreadRng) {
             return;
         }
     }
-    println!("Enter the range higher part");
+    println!("Digite o maximo");
     io::stdin()
         .read_line(&mut hi_str)
         .expect("Error reading line");
@@ -34,13 +34,13 @@ fn rng_game(mut rng: ThreadRng) {
     }
 
     if lo > hi {
-        println!("Error low is bigger than high");
+        println!("Erro minimo maior que maximo");
         return;
     }
     let randnum: u16 = rng.random_range(lo..=hi);
 
-    println!("You can quit by typing: back");
-    println!("Try to find it by typing a random number");
+    println!("Você pode sair digitando: back");
+    println!("Digite um número aleatorio");
     loop {
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Erro");
@@ -49,12 +49,12 @@ fn rng_game(mut rng: ThreadRng) {
         }
         let input = input.trim().parse::<u16>().unwrap();
         if input == randnum {
-            println!("You win");
+            println!("Você ganhou");
             break;
         } else if input > randnum {
-            println!("Your number is bigger than the random number");
+            println!("Seu número é maior que o número aleatório");
         } else {
-            println!("Your number is smaller than the random number");
+            println!("Seu número é menor que o número aleatório");
         }
     }
 }
@@ -62,7 +62,7 @@ fn rng_game(mut rng: ThreadRng) {
 fn rng_number_range(mut rng: ThreadRng) {
     let mut lo_str: String = String::new();
     let mut hi_str: String = String::new();
-    println!("Enter the range lower part");
+    println!("Digite o minimo");
     io::stdin()
         .read_line(&mut lo_str)
         .expect("Error reading line");
@@ -76,7 +76,7 @@ fn rng_number_range(mut rng: ThreadRng) {
             return;
         }
     }
-    println!("Enter the range higher part");
+    println!("Digite o maximo");
     io::stdin()
         .read_line(&mut hi_str)
         .expect("Error reading line");
@@ -92,7 +92,7 @@ fn rng_number_range(mut rng: ThreadRng) {
     }
 
     if lo > hi {
-        println!("Error low is bigger than high");
+        println!("Erro baixo é maior que alto");
         return;
     }
 
@@ -100,9 +100,9 @@ fn rng_number_range(mut rng: ThreadRng) {
     let rand2: u16 = rng.random_range(lo..=hi);
     let rand3: u16 = rng.random_range(lo..=hi);
 
-    println!("random number 1 is {rand1}");
-    println!("random number 2 is {rand2}");
-    println!("random number 3 is {rand3}");
+    println!("numero random 1 is {rand1}");
+    println!("numero random 2 is {rand2}");
+    println!("numero random 3 is {rand3}");
 }
 
 fn main_rng() -> bool {
@@ -111,13 +111,13 @@ fn main_rng() -> bool {
     loop {
         let mut input = String::new();
         println!("RNG");
-        println!("Enter: Game, Number, Back or Exit(turn-off program)");
+        println!("Digite: Jogo, Numero, Back ou Exit(Sai do programa)");
         io::stdin().read_line(&mut input).expect("Erro");
         let input = input.trim().to_lowercase();
 
         match input.as_str() {
-            "game" => rng_game(rng.clone()),
-            "number" => rng_number_range(rng.clone()),
+            "jogo" => rng_game(rng.clone()),
+            "numero" => rng_number_range(rng.clone()),
             "back" => return false,
             "exit" => return true,
             _ => {
@@ -231,9 +231,10 @@ fn main_calculator() {
 fn printer() {
     let mut input: String = String::new();
 
+    println!("Digite o que deseja imprimir");
     io::stdin().read_line(&mut input).expect("Erro");
-    println!("You typed: {input}");
-    println!("do you want to continue? [Y/N]");
+    println!("Você digitou: {input}");
+    println!("Quer continuar? [S/N]");
 
     let mut input = String::new();
 
@@ -242,7 +243,7 @@ fn printer() {
         .expect("Failed to read line");
     let input = input.trim().to_lowercase();
     match input.as_str() {
-        "y" => printer(),
+        "s" => printer(),
         "n" => return,
         _ => {
             println!("? Vou sair do print");
@@ -257,7 +258,7 @@ fn main() {
     // main loop:
     loop {
         // What do you want? enter: Calculator, Print or Exit
-        println!("Enter: Calculator, Print, Rng or Exit");
+        println!("Digite: Calculadora, Print, Rng ou Exit");
 
         let mut input = String::new();
         io::stdin()
@@ -266,7 +267,7 @@ fn main() {
         let input = input.trim().to_lowercase();
 
         match input.as_str() {
-            "calculator" => main_calculator(),
+            "calculadora" => main_calculator(),
             "print" => printer(),
             "rng" => {
                 let quitter: bool = main_rng();
@@ -275,7 +276,7 @@ fn main() {
                 }
             }
             "exit" => break,
-            _ => println!("Please enter a valid command"),
+            _ => println!("Digite um comando válido"),
         }
     }
     // end main loop
