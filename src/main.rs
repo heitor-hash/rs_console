@@ -8,8 +8,8 @@ fn rng_game(mut rng: ThreadRng) {
     io::stdin()
         .read_line(&mut lo_str)
         .expect("Error reading line");
-    let lo: u16;
-    match lo_str.trim().parse::<u16>() {
+    let lo: u32;
+    match lo_str.trim().parse::<u32>() {
         Ok(num) => {
             lo = num;
         }
@@ -22,8 +22,8 @@ fn rng_game(mut rng: ThreadRng) {
     io::stdin()
         .read_line(&mut hi_str)
         .expect("Error reading line");
-    let hi: u16;
-    match hi_str.trim().parse::<u16>() {
+    let hi: u32;
+    match hi_str.trim().parse::<u32>() {
         Ok(num) => {
             hi = num;
         }
@@ -37,17 +37,19 @@ fn rng_game(mut rng: ThreadRng) {
         println!("Erro minimo maior que maximo");
         return;
     }
-    let randnum: u16 = rng.random_range(lo..=hi);
+    let randnum: u32 = rng.random_range(lo..=hi);
 
     println!("Você pode sair digitando: back");
     println!("Digite um número aleatorio");
     loop {
         let mut input = String::new();
-        io::stdin().read_line(&mut input).expect("Erro");
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Erro, Digite um número válido");
         if input == "back" {
             break;
         }
-        let input = input.trim().parse::<u16>().unwrap();
+        let input = input.trim().parse::<u32>().unwrap();
         if input == randnum {
             println!("Você ganhou");
             break;
@@ -66,8 +68,8 @@ fn rng_number_range(mut rng: ThreadRng) {
     io::stdin()
         .read_line(&mut lo_str)
         .expect("Error reading line");
-    let lo: u16;
-    match lo_str.trim().parse::<u16>() {
+    let lo: u32;
+    match lo_str.trim().parse::<u32>() {
         Ok(num) => {
             lo = num;
         }
@@ -80,8 +82,8 @@ fn rng_number_range(mut rng: ThreadRng) {
     io::stdin()
         .read_line(&mut hi_str)
         .expect("Error reading line");
-    let hi: u16;
-    match hi_str.trim().parse::<u16>() {
+    let hi: u32;
+    match hi_str.trim().parse::<u32>() {
         Ok(num) => {
             hi = num;
         }
@@ -96,9 +98,9 @@ fn rng_number_range(mut rng: ThreadRng) {
         return;
     }
 
-    let rand1: u16 = rng.random_range(lo..=hi);
-    let rand2: u16 = rng.random_range(lo..=hi);
-    let rand3: u16 = rng.random_range(lo..=hi);
+    let rand1: u32 = rng.random_range(lo..=hi);
+    let rand2: u32 = rng.random_range(lo..=hi);
+    let rand3: u32 = rng.random_range(lo..=hi);
 
     println!("numero random 1 is {rand1}");
     println!("numero random 2 is {rand2}");
@@ -106,14 +108,14 @@ fn rng_number_range(mut rng: ThreadRng) {
 }
 
 fn main_rng() -> bool {
-    let rng = rand::rng();
+    let rng: ThreadRng = rand::rng();
 
     loop {
-        let mut input = String::new();
+        let mut input: String = String::new();
         println!("RNG");
         println!("Digite: Jogo, Numero, Back ou Exit(Sai do programa)");
         io::stdin().read_line(&mut input).expect("Erro");
-        let input = input.trim().to_lowercase();
+        let input: String = input.trim().to_lowercase();
 
         match input.as_str() {
             "jogo" => rng_game(rng.clone()),

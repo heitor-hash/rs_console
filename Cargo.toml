@@ -5,3 +5,12 @@ edition = "2021"
 
 [dependencies]
 rand = "0.9.1"
+
+
+[profile.release]
+opt-level = 3         # ou "s" para tamanho menor, ou 3 para performance
+lto = true              # Link Time Optimization
+codegen-units = 1       # Compila tudo em uma unidade (mais lento para compilar, mas binário mais rápido)
+panic = "abort"         # Tira o backtrace das panics, reduz o binário
+strip = true            # Remove símbolos de debug (requere Rust 1.71+)
+
