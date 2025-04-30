@@ -18,7 +18,7 @@ fn rng_game(mut rng: ThreadRng) {
             return;
         }
     }
-    println!("Digite o maximo");
+    println!("Digite o máximo");
     io::stdin()
         .read_line(&mut hi_str)
         .expect("Error reading line");
@@ -58,6 +58,7 @@ fn rng_game(mut rng: ThreadRng) {
         } else {
             println!("Seu número é menor que o número aleatório");
         }
+        println!("Digite outro número")
     }
 }
 
@@ -78,7 +79,7 @@ fn rng_number_range(mut rng: ThreadRng) {
             return;
         }
     }
-    println!("Digite o maximo");
+    println!("Digite o máximo");
     io::stdin()
         .read_line(&mut hi_str)
         .expect("Error reading line");
@@ -94,7 +95,7 @@ fn rng_number_range(mut rng: ThreadRng) {
     }
 
     if lo > hi {
-        println!("Erro baixo é maior que alto");
+        println!("Erro minimo é maior que máximo");
         return;
     }
 
@@ -102,9 +103,9 @@ fn rng_number_range(mut rng: ThreadRng) {
     let rand2: u32 = rng.random_range(lo..=hi);
     let rand3: u32 = rng.random_range(lo..=hi);
 
-    println!("numero random 1 is {rand1}");
-    println!("numero random 2 is {rand2}");
-    println!("numero random 3 is {rand3}");
+    println!("numero random 1 é: {rand1}");
+    println!("numero random 2 é: {rand2}");
+    println!("numero random 3 é: {rand3}");
 }
 
 fn main_rng() -> bool {
