@@ -1,14 +1,15 @@
 [package]
-name = "teste2"
+name = "Mini-programa"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+ibig = "0.3.6"
 rand = "0.9.1"
 
 
 [profile.release]
-opt-level = 3         # ou "s" para tamanho menor, ou 3 para performance
+opt-level = 3           # ou "s" para tamanho menor, ou 3 para performance
 lto = true              # Link Time Optimization
 codegen-units = 1       # Compila tudo em uma unidade (mais lento para compilar, mas binário mais rápido)
 panic = "abort"         # Tira o backtrace das panics, reduz o binário

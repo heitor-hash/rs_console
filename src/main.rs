@@ -1,6 +1,9 @@
 use rand::{rngs::ThreadRng, Rng};
 use std::io::{self};
 
+mod mod1;
+mod mod2;
+
 fn rng_game(mut rng: ThreadRng) {
     let mut lo_str: String = String::new();
     let mut hi_str: String = String::new();
@@ -131,8 +134,102 @@ fn main_rng() -> bool {
     }
 }
 
+fn calc_manager() {
+    loop {
+        println!("Digite um número:");
+        println!("1: Calculadora normal");
+        println!("2: Fibonacci");
+        println!("3: Função 2ºgrau");
+        println!("Qualquer outro para sair");
+
+        let mut input: String = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read number");
+        let input = input.trim().parse::<u8>().unwrap();
+
+        match input {
+            1 => {
+                main_calculator();
+                // repetir?
+                println!("Repetir? [S/N]");
+                let mut input: String = String::new();
+                io::stdin()
+                    .read_line(&mut input)
+                    .expect("Failed to read number");
+                match input.trim().to_lowercase().as_str() {
+                    "s" => continue,
+                    "n" => break,
+                    _ => break,
+                }
+            }
+            2 => {
+                println!("Digite o indice do fibonacci que você quer");
+                println!("(Número inteiro)");
+                let mut inputf = String::new();
+                io::stdin()
+                    .read_line(&mut inputf)
+                    .expect("Failed to read number");
+                let index: u32 = inputf.trim().parse::<u32>().unwrap();
+                let _ = mod1::fibonacci(index);
+
+                // repetir?
+                println!("Repetir? [S/N]");
+                let mut input: String = String::new();
+                io::stdin()
+                    .read_line(&mut input)
+                    .expect("Failed to read number");
+                match input.trim().to_lowercase().as_str() {
+                    "s" => continue,
+                    "n" => break,
+                    _ => break,
+                }
+            }
+            3 => {
+                println!("f(x) = ax² + bx + c");
+                println!("Digite o valor de a");
+                let mut inputa: String = String::new();
+                io::stdin()
+                    .read_line(&mut inputa)
+                    .expect("Failed to read number");
+                println!("Digite o valor de b");
+                let mut inputb: String = String::new();
+                io::stdin()
+                    .read_line(&mut inputb)
+                    .expect("Failed to read number");
+                println!("Digite o valor de c");
+                let mut inputc: String = String::new();
+                io::stdin()
+                    .read_line(&mut inputc)
+                    .expect("Failed to read number");
+                // parse inputs into f64:
+                let a: f64 = inputa.trim().parse::<f64>().unwrap();
+                let b: f64 = inputb.trim().parse::<f64>().unwrap();
+                let c: f64 = inputc.trim().parse::<f64>().unwrap();
+
+                mod2::f2_deg(a, b, c);
+
+                // repetir?
+                println!("Repetir? [S/N]");
+                let mut input: String = String::new();
+                io::stdin()
+                    .read_line(&mut input)
+                    .expect("Failed to read number");
+                match input.trim().to_lowercase().as_str() {
+                    "s" => continue,
+                    "n" => break,
+                    _ => break,
+                }
+            }
+            _ => {
+                return;
+            }
+        }
+    }
+}
+
 fn main_calculator() {
-    println!("Digite um numero: ");
+    println!("Digite um número: ");
 
     let mut input: String = String::new();
     io::stdin()
@@ -150,11 +247,11 @@ fn main_calculator() {
     }
 
     println!("Digite um operador:");
-    println!("1: adição");
-    println!("2: subtração");
-    println!("3: multiplicação");
-    println!("4: divisão");
-    println!("5: raiz quadrada");
+    println!("1: Adição");
+    println!("2: Subtração");
+    println!("3: Multiplicação");
+    println!("4: Divisão");
+    println!("5: Raiz quadrada");
 
     let mut operador: String = String::new();
     io::stdin()
@@ -228,7 +325,7 @@ fn main_calculator() {
         _ => (),
     }
     // wait a bit to let the user see the answear:
-    std::thread::sleep(std::time::Duration::from_secs(1));
+    // std::thread::sleep(std::time::Duration::from_secs(1));
 }
 
 fn printer() {
@@ -270,7 +367,7 @@ fn main() {
         let input = input.trim().to_lowercase();
 
         match input.as_str() {
-            "calculadora" => main_calculator(),
+            "calculadora" => calc_manager(),
             "print" => printer(),
             "rng" => {
                 let quitter: bool = main_rng();
