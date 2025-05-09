@@ -1,5 +1,5 @@
 use rand::{rngs::ThreadRng, Rng};
-use std::io::{self};
+use std::io;
 
 mod mod1;
 mod mod2;
@@ -61,7 +61,7 @@ fn rng_game(mut rng: ThreadRng) {
         } else {
             println!("Seu número é menor que o número aleatório");
         }
-        println!("Digite outro número")
+        println!("Digite outro número");
     }
 }
 
@@ -139,17 +139,18 @@ fn calc_manager() {
         println!("Digite um número:");
         println!("1: Calculadora normal");
         println!("2: Fibonacci");
-        println!("3: Função 2ºgrau");
+        println!("3: Função 2º grau");
+        println!("4: Função 3º grau");
         println!("Qualquer outro para sair");
 
         let mut input: String = String::new();
         io::stdin()
             .read_line(&mut input)
             .expect("Failed to read number");
-        let input = input.trim().parse::<u8>().unwrap();
+        let input: &str = input.trim();
 
         match input {
-            1 => {
+            "1" => {
                 main_calculator();
                 // repetir?
                 println!("Repetir? [S/N]");
@@ -163,7 +164,7 @@ fn calc_manager() {
                     _ => break,
                 }
             }
-            2 => {
+            "2" => {
                 println!("Digite o indice do fibonacci que você quer");
                 println!("(Número inteiro)");
                 let mut inputf = String::new();
@@ -185,19 +186,19 @@ fn calc_manager() {
                     _ => break,
                 }
             }
-            3 => {
+            "3" => {
                 println!("f(x) = ax² + bx + c");
-                println!("Digite o valor de a");
+                println!("Digite o valor de a:");
                 let mut inputa: String = String::new();
                 io::stdin()
                     .read_line(&mut inputa)
                     .expect("Failed to read number");
-                println!("Digite o valor de b");
+                println!("Digite o valor de b:");
                 let mut inputb: String = String::new();
                 io::stdin()
                     .read_line(&mut inputb)
                     .expect("Failed to read number");
-                println!("Digite o valor de c");
+                println!("Digite o valor de c:");
                 let mut inputc: String = String::new();
                 io::stdin()
                     .read_line(&mut inputc)
@@ -207,7 +208,178 @@ fn calc_manager() {
                 let b: f64 = inputb.trim().parse::<f64>().unwrap();
                 let c: f64 = inputc.trim().parse::<f64>().unwrap();
 
-                mod2::f2_deg(a, b, c);
+                let delta: f64 = b.powi(2) - 4.0 * a * c;
+
+                if delta < 0.0 {
+                    println!("Não há raízes reais");
+                } else if delta == 0.0 {
+                    let x: f64 = -b / (2.0 * a);
+                    println!("Há uma raiz real: {}", x);
+                } else {
+                    let x1: f64 = (-b + delta.sqrt()) / (2.0 * a);
+                    let x2: f64 = (-b - delta.sqrt()) / (2.0 * a);
+                    println!("Há duas raízes reais: {} e {}", x1, x2);
+                };
+                let vertex_x: f64 = -b / (2.0 * a);
+                let vertex_y: f64 = -delta / (4.0 * a);
+                println!("O vértice da parábola é: ({}, {})", vertex_x, vertex_y);
+
+                println!("Quer desenhar um gráfico? [S/N]");
+                let mut input: String = String::new();
+                io::stdin()
+                    .read_line(&mut input)
+                    .expect("Failed to read number");
+                match input.trim().to_lowercase().as_str() {
+                    "s" => {
+                        println!("Digite a precisão em unidades: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let step: f64 = input.trim().parse::<f64>().unwrap();
+
+                        println!("Mínimo valor de x: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let x_min: f64 = input.trim().parse::<f64>().unwrap();
+
+                        println!("Máximo valor de x: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let x_max: f64 = input.trim().parse::<f64>().unwrap();
+
+                        println!("Mínimo valor de y: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let y_min: f64 = input.trim().parse::<f64>().unwrap();
+
+                        println!("Máximo valor de y: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let y_max: f64 = input.trim().parse::<f64>().unwrap();
+
+                        mod2::f2_deg(
+                            a,
+                            b,
+                            c,
+                            step,
+                            x_min as i32,
+                            x_max as i32,
+                            y_min as i32,
+                            y_max as i32,
+                        );
+                        println!("Grafico desenhado no local do arquivo como \"grafico.png\"");
+                    }
+                    "n" => {}
+                    _ => {}
+                }
+
+                // repetir?
+                println!("Repetir? [S/N]");
+                let mut input: String = String::new();
+                io::stdin()
+                    .read_line(&mut input)
+                    .expect("Failed to read number");
+                match input.trim().to_lowercase().as_str() {
+                    "s" => continue,
+                    "n" => break,
+                    _ => break,
+                }
+            }
+            "4" => {
+                println!("f(x) = ax³ + bx² + cx + d");
+                println!("Digite o valor de a:");
+                let mut inputa: String = String::new();
+                io::stdin()
+                    .read_line(&mut inputa)
+                    .expect("Failed to read number");
+                println!("Digite o valor de b:");
+                let mut inputb: String = String::new();
+                io::stdin()
+                    .read_line(&mut inputb)
+                    .expect("Failed to read number");
+                println!("Digite o valor de c:");
+                let mut inputc: String = String::new();
+                io::stdin()
+                    .read_line(&mut inputc)
+                    .expect("Failed to read number");
+                println!("Digite o valor de d:");
+                let mut inputd: String = String::new();
+                io::stdin()
+                    .read_line(&mut inputd)
+                    .expect("Failed to read number");
+                // parse inputs into f64:
+                let a: f64 = inputa.trim().parse::<f64>().unwrap();
+                let b: f64 = inputb.trim().parse::<f64>().unwrap();
+                let c: f64 = inputc.trim().parse::<f64>().unwrap();
+                let d: f64 = inputd.trim().parse::<f64>().unwrap();
+
+                println!("Quer desenhar um gráfico? [S/N]");
+                let mut input: String = String::new();
+                io::stdin()
+                    .read_line(&mut input)
+                    .expect("Failed to read number");
+                match input.trim().to_lowercase().as_str() {
+                    "s" => {
+                        println!("Digite a precisão em unidades: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let step: f64 = input.trim().parse::<f64>().unwrap();
+
+                        println!("Mínimo valor de x: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let x_min: f64 = input.trim().parse::<f64>().unwrap();
+
+                        println!("Máximo valor de x: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let x_max: f64 = input.trim().parse::<f64>().unwrap();
+
+                        println!("Mínimo valor de y: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let y_min: f64 = input.trim().parse::<f64>().unwrap();
+
+                        println!("Máximo valor de y: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let y_max: f64 = input.trim().parse::<f64>().unwrap();
+
+                        mod2::f3_deg(
+                            a,
+                            b,
+                            c,
+                            d,
+                            step,
+                            x_min as i32,
+                            x_max as i32,
+                            y_min as i32,
+                            y_max as i32,
+                        );
+                        println!("Grafico desenhado no local do arquivo como \"grafico.png\"");
+                    }
+                    "n" => {}
+                    _ => {}
+                }
 
                 // repetir?
                 println!("Repetir? [S/N]");
@@ -367,7 +539,7 @@ fn main() {
         let input = input.trim().to_lowercase();
 
         match input.as_str() {
-            "calculadora" => calc_manager(),
+            "calculadora" | "calc" => calc_manager(),
             "print" => printer(),
             "rng" => {
                 let quitter: bool = main_rng();

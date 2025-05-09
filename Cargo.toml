@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 ibig = "0.3.6"
+plotters = "0.3.7"
 rand = "0.9.1"
 
 

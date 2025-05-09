@@ -1,21 +1,169 @@
 // Mod para função do segundo grau
+use plotters::prelude::*;
 #[allow(unused)]
 
-pub fn f2_deg(a: f64, b: f64, c: f64) -> () {
-    // Função de segundo grau
-    let delta: f64 = b.powi(2) - 4.0 * a * c;
+fn line1_style() -> ShapeStyle {
+    ShapeStyle {
+        color: RGBAColor(255, 0, 0, 0.8),
+        filled: false,
+        stroke_width: 3u32,
+    }
+}
 
-    if delta < 0.0 {
-        println!("Não há raízes reais");
-    } else if delta == 0.0 {
-        let x: f64 = -b / (2.0 * a);
-        println!("Há uma raiz real: {}", x);
-    } else {
-        let x1: f64 = (-b + delta.sqrt()) / (2.0 * a);
-        let x2: f64 = (-b - delta.sqrt()) / (2.0 * a);
-        println!("Há duas raízes reais: {} e {}", x1, x2);
+fn f3_deg_to_range(
+    a: f64,
+    b: f64,
+    c: f64,
+    d: f64,
+    step: f64,
+    x_min: i32,
+    x_max: i32,
+) -> impl Iterator<Item = (f64, f64)> {
+    let x_min: f64 = x_min as f64 / step;
+    let x_max: f64 = x_max as f64 / step;
+
+    let range = (x_min as i32..=x_max as i32).map(move |i| {
+        let x: f64 = i as f64 * step;
+        (x, a * x.powf(3.0) + b * x.powf(2.0) + c * x + d)
+    });
+    range
+}
+
+fn f2_deg_to_range(
+    a: f64,
+    b: f64,
+    c: f64,
+    step: f64,
+    x_min: i32,
+    x_max: i32,
+) -> impl Iterator<Item = (f64, f64)> {
+    let x_min: f64 = x_min as f64 / step;
+    let x_max: f64 = x_max as f64 / step;
+
+    let range = (x_min as i32..=x_max as i32).map(move |i| {
+        let x: f64 = i as f64 * step;
+        (x, a * x.powf(2.0) + b * x + c)
+    });
+    range
+}
+
+pub fn f3_deg(
+    a: f64,
+    b: f64,
+    c: f64,
+    d: f64,
+    step: f64,
+    x_min: i32,
+    x_max: i32,
+    y_min: i32,
+    y_max: i32,
+) -> () {
+    let range = f3_deg_to_range(a, b, c, d, step, x_min, x_max);
+    let range_style: ShapeStyle = line1_style();
+
+    let mut fn_str = format!("{a}x³");
+
+    if b != 0.0 {
+        fn_str = format!("{fn_str} + {b}x²");
+    }
+    if c != 0.0 {
+        fn_str = format!("{fn_str} + {c}x");
+    }
+    if d != 0.0 {
+        fn_str = format!("{fn_str} + {d}");
+    }
+
+    let _ = draw_plot_x3840y2160(x_min, x_max, y_min, y_max, range, range_style, fn_str);
+}
+
+pub fn f2_deg(
+    a: f64,
+    b: f64,
+    c: f64,
+    step: f64,
+    x_min: i32,
+    x_max: i32,
+    y_min: i32,
+    y_max: i32,
+) -> () {
+    // Função de segundo grau
+
+    let range = f2_deg_to_range(a, b, c, step, x_min, x_max);
+    let range_style: ShapeStyle = line1_style();
+
+    let mut fn_str: String = format!("{a}x²");
+
+    if b != 0.0 {
+        fn_str = format!("{fn_str} + {b}x")
+    }
+    if c != 0.0 {
+        fn_str = format!("{fn_str} + {c}")
+    }
+
+    let _ = draw_plot_x3840y2160(x_min, x_max, y_min, y_max, range, range_style, fn_str);
+    // chart.draw_series(LineSeries::new(range, line1_style.clone()))?;
+}
+
+fn draw_plot_x3840y2160(
+    x_min: i32,
+    x_max: i32,
+    y_min: i32,
+    y_max: i32,
+    range: impl Iterator<Item = (f64, f64)>,
+    range_style: ShapeStyle,
+    fn_str: String,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let root = BitMapBackend::new("grafico.png", (3840, 2160)).into_drawing_area();
+    root.fill(&WHITE)?;
+    let root = root.margin(60, 100, 200, 120);
+
+    let mut chart = ChartBuilder::on(&root)
+        .caption(fn_str, ("sans-serrif", 150))
+        .x_label_area_size(35)
+        .y_label_area_size(40)
+        .build_cartesian_2d(x_min as f64..x_max as f64, y_min as f64..y_max as f64)?;
+
+    chart
+        .configure_mesh()
+        .label_style(("sans-serif", 60).into_font())
+        .x_labels(31) // Número de labels no eixo X (-10 a 10, incrementando de 1 em 1)
+        .y_labels(31) // Número de labels no eixo Y (-10 a 200, incrementando de 10 em 10)
+        .x_label_formatter(&|v| format!("{:.0}", v)) // Formata para inteiro
+        .y_label_formatter(&|v| format!("{:.0}", v))
+        .axis_style(ShapeStyle {
+            color: RGBAColor(0, 0, 0, 1.0),
+            filled: false,
+            stroke_width: 1u32,
+        })
+        .max_light_lines(1)
+        .bold_line_style(ShapeStyle {
+            color: RGBAColor(0, 0, 50, 0.8),
+            filled: false,
+            stroke_width: 1u32,
+        })
+        .draw()?;
+
+    let x_axis = (-1..=1).map(|x| {
+        let x = x as f64 * 1000000f64;
+        (x, 0.0f64)
+    });
+
+    let y_axis = (-1..=1).map(|y| {
+        let y = y as f64 * 1000000f64;
+        (0.0f64, y)
+    });
+
+    let xy_axis_style: ShapeStyle = ShapeStyle {
+        color: RGBAColor(0, 0, 0, 1.0),
+        filled: false,
+        stroke_width: 2u32,
     };
-    let vertex_x: f64 = -b / (2.0 * a);
-    let vertex_y: f64 = -delta / (4.0 * a);
-    println!("O vértice da parábola é: ({}, {})", vertex_x, vertex_y);
+
+    chart.draw_series(LineSeries::new(x_axis, xy_axis_style.clone()))?;
+    chart.draw_series(LineSeries::new(y_axis, xy_axis_style.clone()))?;
+
+    chart.draw_series(LineSeries::new(range, range_style))?;
+
+    root.present()?;
+    Ok(())
 }
