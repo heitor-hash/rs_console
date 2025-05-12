@@ -2,11 +2,11 @@
 use plotters::prelude::*;
 #[allow(unused)]
 
-fn line1_style() -> ShapeStyle {
+fn line1_style(res_mult: f64) -> ShapeStyle {
     ShapeStyle {
         color: RGBAColor(255, 0, 0, 0.8),
         filled: false,
-        stroke_width: 3u32,
+        stroke_width: (2f64 * res_mult) as u32,
     }
 }
 
@@ -57,9 +57,10 @@ pub fn f3_deg(
     x_max: i32,
     y_min: i32,
     y_max: i32,
+    res_mult: f64,
 ) -> () {
     let range = f3_deg_to_range(a, b, c, d, step, x_min, x_max);
-    let range_style: ShapeStyle = line1_style();
+    let range_style: ShapeStyle = line1_style(res_mult);
 
     let mut fn_str = format!("{a}x³");
 
@@ -73,7 +74,16 @@ pub fn f3_deg(
         fn_str = format!("{fn_str} + {d}");
     }
 
-    let _ = draw_plot_x3840y2160(x_min, x_max, y_min, y_max, range, range_style, fn_str);
+    let _ = draw_plot_x640y480(
+        x_min,
+        x_max,
+        y_min,
+        y_max,
+        range,
+        range_style,
+        fn_str,
+        res_mult,
+    );
 }
 
 pub fn f2_deg(
@@ -85,11 +95,12 @@ pub fn f2_deg(
     x_max: i32,
     y_min: i32,
     y_max: i32,
+    res_mult: f64,
 ) -> () {
     // Função de segundo grau
 
     let range = f2_deg_to_range(a, b, c, step, x_min, x_max);
-    let range_style: ShapeStyle = line1_style();
+    let range_style: ShapeStyle = line1_style(res_mult);
 
     let mut fn_str: String = format!("{a}x²");
 
@@ -100,11 +111,20 @@ pub fn f2_deg(
         fn_str = format!("{fn_str} + {c}")
     }
 
-    let _ = draw_plot_x3840y2160(x_min, x_max, y_min, y_max, range, range_style, fn_str);
+    let _ = draw_plot_x640y480(
+        x_min,
+        x_max,
+        y_min,
+        y_max,
+        range,
+        range_style,
+        fn_str,
+        res_mult,
+    );
     // chart.draw_series(LineSeries::new(range, line1_style.clone()))?;
 }
 
-fn draw_plot_x3840y2160(
+fn draw_plot_x640y480(
     x_min: i32,
     x_max: i32,
     y_min: i32,
@@ -112,20 +132,30 @@ fn draw_plot_x3840y2160(
     range: impl Iterator<Item = (f64, f64)>,
     range_style: ShapeStyle,
     fn_str: String,
+    res_mult: f64,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let root = BitMapBackend::new("grafico.png", (3840, 2160)).into_drawing_area();
+    let root = BitMapBackend::new(
+        "grafico.png",
+        ((640f64 * res_mult) as u32, (480f64 * res_mult) as u32),
+    )
+    .into_drawing_area();
     root.fill(&WHITE)?;
-    let root = root.margin(60, 100, 200, 120);
+    let root = root.margin(
+        (10f64 * res_mult) as i32,
+        (20f64 * res_mult) as i32,
+        (30f64 * res_mult) as i32,
+        (20f64 * res_mult) as i32,
+    );
 
     let mut chart = ChartBuilder::on(&root)
-        .caption(fn_str, ("sans-serrif", 150))
-        .x_label_area_size(35)
-        .y_label_area_size(40)
+        .caption(fn_str, ("sans-serrif", 40f64 * res_mult))
+        .x_label_area_size((10f64 * res_mult) as i32)
+        .y_label_area_size((30f64 * res_mult) as i32)
         .build_cartesian_2d(x_min as f64..x_max as f64, y_min as f64..y_max as f64)?;
 
     chart
         .configure_mesh()
-        .label_style(("sans-serif", 60).into_font())
+        .label_style(("sans-serif", (18f64 * res_mult)).into_font())
         .x_labels(31) // Número de labels no eixo X (-10 a 10, incrementando de 1 em 1)
         .y_labels(31) // Número de labels no eixo Y (-10 a 200, incrementando de 10 em 10)
         .x_label_formatter(&|v| format!("{:.0}", v)) // Formata para inteiro
@@ -133,13 +163,13 @@ fn draw_plot_x3840y2160(
         .axis_style(ShapeStyle {
             color: RGBAColor(0, 0, 0, 1.0),
             filled: false,
-            stroke_width: 1u32,
+            stroke_width: (1f64 * res_mult) as u32,
         })
         .max_light_lines(1)
         .bold_line_style(ShapeStyle {
-            color: RGBAColor(0, 0, 50, 0.8),
+            color: RGBAColor(0, 0, 50, 0.55),
             filled: false,
-            stroke_width: 1u32,
+            stroke_width: (1f64 * res_mult) as u32,
         })
         .draw()?;
 
@@ -156,7 +186,7 @@ fn draw_plot_x3840y2160(
     let xy_axis_style: ShapeStyle = ShapeStyle {
         color: RGBAColor(0, 0, 0, 1.0),
         filled: false,
-        stroke_width: 2u32,
+        stroke_width: (2f64 * res_mult) as u32,
     };
 
     chart.draw_series(LineSeries::new(x_axis, xy_axis_style.clone()))?;

@@ -266,6 +266,13 @@ fn calc_manager() {
                             .expect("Failed to read number");
                         let y_max: f64 = input.trim().parse::<f64>().unwrap();
 
+                        println!("Digite o multiplicador de resolução: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let res_mult: f64 = input.trim().parse::<f64>().unwrap();
+
                         mod2::f2_deg(
                             a,
                             b,
@@ -275,6 +282,7 @@ fn calc_manager() {
                             x_max as i32,
                             y_min as i32,
                             y_max as i32,
+                            res_mult,
                         );
                         println!("Grafico desenhado no local do arquivo como \"grafico.png\"");
                     }
@@ -364,6 +372,13 @@ fn calc_manager() {
                             .expect("Failed to read number");
                         let y_max: f64 = input.trim().parse::<f64>().unwrap();
 
+                        println!("Digite o multiplicador de resolução: ");
+                        let mut input: String = String::new();
+                        io::stdin()
+                            .read_line(&mut input)
+                            .expect("Failed to read number");
+                        let res_mult: f64 = input.trim().parse::<f64>().unwrap();
+
                         mod2::f3_deg(
                             a,
                             b,
@@ -374,6 +389,7 @@ fn calc_manager() {
                             x_max as i32,
                             y_min as i32,
                             y_max as i32,
+                            res_mult,
                         );
                         println!("Grafico desenhado no local do arquivo como \"grafico.png\"");
                     }
