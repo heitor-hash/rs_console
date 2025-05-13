@@ -1,12 +1,12 @@
 // Mod para função do segundo grau
 use plotters::prelude::*;
-#[allow(unused)]
 
 fn line1_style(res_mult: f64) -> ShapeStyle {
     ShapeStyle {
         color: RGBAColor(255, 0, 0, 0.8),
         filled: false,
-        stroke_width: (2f64 * res_mult) as u32,
+        // stroke_width: u32::max(1u32, (2f64 * res_mult) as u32),
+        stroke_width: 3u32,
     }
 }
 
@@ -86,6 +86,87 @@ pub fn f3_deg(
     );
 }
 
+pub fn f3_deg_easy(a: f64, b: f64, c: f64, d: f64, x_min: i32, x_max: i32, res_mult: f64) {
+    let range = f3_deg_to_range(a, b, c, d, 0.01f64, x_min, x_max);
+    let range_style = line1_style(res_mult);
+
+    let mut fn_str: String = format!("{a}x³");
+
+    if b != 0.0 {
+        fn_str = format!("{fn_str} + {b}x²");
+    }
+    if c != 0.0 {
+        fn_str = format!("{fn_str} + {c}x");
+    }
+    if d != 0.0 {
+        fn_str = format!("{fn_str} + {d}");
+    }
+
+    let coll: Vec<_> = range.collect();
+
+    let mut y_min: f64 = -5f64;
+    let mut y_max: f64 = 5f64;
+    for (_, y) in &coll {
+        if y < &y_min {
+            y_min = *y;
+        }
+        if y > &y_max {
+            y_max = *y;
+        }
+    }
+    y_min -= 3.;
+    y_max += 3.;
+    let _ = draw_plot_x640y480(
+        x_min,
+        x_max,
+        y_min as i32,
+        y_max as i32,
+        coll.into_iter(),
+        range_style,
+        fn_str,
+        res_mult,
+    );
+}
+
+pub fn f2_deg_easy(a: f64, b: f64, c: f64, x_min: i32, x_max: i32, res_mult: f64) {
+    let range = f2_deg_to_range(a, b, c, 0.01f64, x_min, x_max);
+    let range_style = line1_style(res_mult);
+
+    let mut fn_str: String = format!("{a}x²");
+
+    if b != 0.0 {
+        fn_str = format!("{fn_str} + {b}x")
+    }
+    if c != 0.0 {
+        fn_str = format!("{fn_str} + {c}")
+    }
+
+    let coll: Vec<_> = range.collect();
+
+    let mut y_min: f64 = -5f64;
+    let mut y_max: f64 = 5f64;
+    for (_, y) in &coll {
+        if y < &y_min {
+            y_min = *y;
+        }
+        if y > &y_max {
+            y_max = *y;
+        }
+    }
+    y_min -= 3.;
+    y_max += 3.;
+    let _ = draw_plot_x640y480(
+        x_min,
+        x_max,
+        y_min as i32,
+        y_max as i32,
+        coll.into_iter(),
+        range_style,
+        fn_str,
+        res_mult,
+    );
+}
+
 pub fn f2_deg(
     a: f64,
     b: f64,
@@ -135,7 +216,7 @@ fn draw_plot_x640y480(
     res_mult: f64,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let root = BitMapBackend::new(
-        "grafico.png",
+        "plot.png",
         ((640f64 * res_mult) as u32, (480f64 * res_mult) as u32),
     )
     .into_drawing_area();
@@ -163,13 +244,15 @@ fn draw_plot_x640y480(
         .axis_style(ShapeStyle {
             color: RGBAColor(0, 0, 0, 1.0),
             filled: false,
-            stroke_width: (1f64 * res_mult) as u32,
+            // stroke_width: u32::max(1u32, (1f64 * res_mult) as u32),
+            stroke_width: 2u32,
         })
         .max_light_lines(1)
         .bold_line_style(ShapeStyle {
-            color: RGBAColor(0, 0, 50, 0.55),
+            color: RGBAColor(20, 20, 60, 0.55),
             filled: false,
-            stroke_width: (1f64 * res_mult) as u32,
+            // stroke_width: u32::max(1u32, (1f64 * res_mult) as u32),
+            stroke_width: 2u32,
         })
         .draw()?;
 
@@ -186,7 +269,8 @@ fn draw_plot_x640y480(
     let xy_axis_style: ShapeStyle = ShapeStyle {
         color: RGBAColor(0, 0, 0, 1.0),
         filled: false,
-        stroke_width: (2f64 * res_mult) as u32,
+        // stroke_width: u32::max(1u32, (2f64 * res_mult) as u32),
+        stroke_width: 3u32,
     };
 
     chart.draw_series(LineSeries::new(x_axis, xy_axis_style.clone()))?;

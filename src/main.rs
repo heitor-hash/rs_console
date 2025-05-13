@@ -231,12 +231,12 @@ fn calc_manager() {
                     .expect("Failed to read number");
                 match input.trim().to_lowercase().as_str() {
                     "s" => {
-                        println!("Digite a precisão em unidades: ");
-                        let mut input: String = String::new();
-                        io::stdin()
-                            .read_line(&mut input)
-                            .expect("Failed to read number");
-                        let step: f64 = input.trim().parse::<f64>().unwrap();
+                        // println!("Digite a precisão em unidades: ");
+                        // let mut input: String = String::new();
+                        // io::stdin()
+                        //     .read_line(&mut input)
+                        //     .expect("Failed to read number");
+                        // let step: f64 = input.trim().parse::<f64>().unwrap();
 
                         println!("Mínimo valor de x: ");
                         let mut input: String = String::new();
@@ -252,19 +252,19 @@ fn calc_manager() {
                             .expect("Failed to read number");
                         let x_max: f64 = input.trim().parse::<f64>().unwrap();
 
-                        println!("Mínimo valor de y: ");
-                        let mut input: String = String::new();
-                        io::stdin()
-                            .read_line(&mut input)
-                            .expect("Failed to read number");
-                        let y_min: f64 = input.trim().parse::<f64>().unwrap();
+                        // println!("Mínimo valor de y: ");
+                        // let mut input: String = String::new();
+                        // io::stdin()
+                        //     .read_line(&mut input)
+                        //     .expect("Failed to read number");
+                        // let y_min: f64 = input.trim().parse::<f64>().unwrap();
 
-                        println!("Máximo valor de y: ");
-                        let mut input: String = String::new();
-                        io::stdin()
-                            .read_line(&mut input)
-                            .expect("Failed to read number");
-                        let y_max: f64 = input.trim().parse::<f64>().unwrap();
+                        // println!("Máximo valor de y: ");
+                        // let mut input: String = String::new();
+                        // io::stdin()
+                        //     .read_line(&mut input)
+                        //     .expect("Failed to read number");
+                        // let y_max: f64 = input.trim().parse::<f64>().unwrap();
 
                         println!("Digite o multiplicador de resolução: ");
                         let mut input: String = String::new();
@@ -273,18 +273,18 @@ fn calc_manager() {
                             .expect("Failed to read number");
                         let res_mult: f64 = input.trim().parse::<f64>().unwrap();
 
-                        mod2::f2_deg(
+                        mod2::f2_deg_easy(
                             a,
                             b,
                             c,
-                            step,
+                            // step,
                             x_min as i32,
                             x_max as i32,
-                            y_min as i32,
-                            y_max as i32,
+                            // y_min as i32,
+                            // y_max as i32,
                             res_mult,
                         );
-                        println!("Grafico desenhado no local do arquivo como \"grafico.png\"");
+                        println!("Grafico desenhado no local do arquivo como \"plot.png\"");
                     }
                     "n" => {}
                     _ => {}
@@ -337,12 +337,12 @@ fn calc_manager() {
                     .expect("Failed to read number");
                 match input.trim().to_lowercase().as_str() {
                     "s" => {
-                        println!("Digite a precisão em unidades: ");
-                        let mut input: String = String::new();
-                        io::stdin()
-                            .read_line(&mut input)
-                            .expect("Failed to read number");
-                        let step: f64 = input.trim().parse::<f64>().unwrap();
+                        // println!("Digite a precisão em unidades: ");
+                        // let mut input: String = String::new();
+                        // io::stdin()
+                        //     .read_line(&mut input)
+                        //     .expect("Failed to read number");
+                        // let step: f64 = input.trim().parse::<f64>().unwrap();
 
                         println!("Mínimo valor de x: ");
                         let mut input: String = String::new();
@@ -358,19 +358,19 @@ fn calc_manager() {
                             .expect("Failed to read number");
                         let x_max: f64 = input.trim().parse::<f64>().unwrap();
 
-                        println!("Mínimo valor de y: ");
-                        let mut input: String = String::new();
-                        io::stdin()
-                            .read_line(&mut input)
-                            .expect("Failed to read number");
-                        let y_min: f64 = input.trim().parse::<f64>().unwrap();
+                        // println!("Mínimo valor de y: ");
+                        // let mut input: String = String::new();
+                        // io::stdin()
+                        //     .read_line(&mut input)
+                        //     .expect("Failed to read number");
+                        // let y_min: f64 = input.trim().parse::<f64>().unwrap();
 
-                        println!("Máximo valor de y: ");
-                        let mut input: String = String::new();
-                        io::stdin()
-                            .read_line(&mut input)
-                            .expect("Failed to read number");
-                        let y_max: f64 = input.trim().parse::<f64>().unwrap();
+                        // println!("Máximo valor de y: ");
+                        // let mut input: String = String::new();
+                        // io::stdin()
+                        //     .read_line(&mut input)
+                        //     .expect("Failed to read number");
+                        // let y_max: f64 = input.trim().parse::<f64>().unwrap();
 
                         println!("Digite o multiplicador de resolução: ");
                         let mut input: String = String::new();
@@ -379,19 +379,19 @@ fn calc_manager() {
                             .expect("Failed to read number");
                         let res_mult: f64 = input.trim().parse::<f64>().unwrap();
 
-                        mod2::f3_deg(
+                        mod2::f3_deg_easy(
                             a,
                             b,
                             c,
                             d,
-                            step,
+                            // step,
                             x_min as i32,
                             x_max as i32,
-                            y_min as i32,
-                            y_max as i32,
+                            // y_min as i32,
+                            // y_max as i32,
                             res_mult,
                         );
-                        println!("Grafico desenhado no local do arquivo como \"grafico.png\"");
+                        println!("Grafico desenhado no local do arquivo como \"plot.png\"");
                     }
                     "n" => {}
                     _ => {}
