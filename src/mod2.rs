@@ -5,8 +5,8 @@ fn line1_style(res_mult: f64) -> ShapeStyle {
     ShapeStyle {
         color: RGBAColor(255, 0, 0, 0.8),
         filled: false,
-        // stroke_width: u32::max(1u32, (2f64 * res_mult) as u32),
-        stroke_width: 3u32,
+        stroke_width: u32::max(2u32, (1f64 * res_mult) as u32),
+        // stroke_width: 3u32,
     }
 }
 
@@ -104,8 +104,8 @@ pub fn f3_deg_easy(a: f64, b: f64, c: f64, d: f64, x_min: i32, x_max: i32, res_m
 
     let coll: Vec<_> = range.collect();
 
-    let mut y_min: f64 = -5f64;
-    let mut y_max: f64 = 5f64;
+    let mut y_min: f64 = 5f64;
+    let mut y_max: f64 = -5f64;
     for (_, y) in &coll {
         if y < &y_min {
             y_min = *y;
@@ -114,8 +114,9 @@ pub fn f3_deg_easy(a: f64, b: f64, c: f64, d: f64, x_min: i32, x_max: i32, res_m
             y_max = *y;
         }
     }
-    y_min -= 3.;
-    y_max += 3.;
+    let diff: f64 = y_max - y_min;
+    y_min -= f64::max(diff * 0.1, 1.0);
+    y_max += f64::max(diff * 0.1, 1.0);
     let _ = draw_plot_x640y480(
         x_min,
         x_max,
@@ -143,8 +144,8 @@ pub fn f2_deg_easy(a: f64, b: f64, c: f64, x_min: i32, x_max: i32, res_mult: f64
 
     let coll: Vec<_> = range.collect();
 
-    let mut y_min: f64 = -5f64;
-    let mut y_max: f64 = 5f64;
+    let mut y_min: f64 = 5f64;
+    let mut y_max: f64 = -5f64;
     for (_, y) in &coll {
         if y < &y_min {
             y_min = *y;
@@ -153,8 +154,9 @@ pub fn f2_deg_easy(a: f64, b: f64, c: f64, x_min: i32, x_max: i32, res_mult: f64
             y_max = *y;
         }
     }
-    y_min -= 3.;
-    y_max += 3.;
+    let diff: f64 = y_max - y_min;
+    y_min -= f64::max(diff * 0.1, 1.0);
+    y_max += f64::max(diff * 0.1, 1.0);
     let _ = draw_plot_x640y480(
         x_min,
         x_max,
@@ -231,28 +233,28 @@ fn draw_plot_x640y480(
     let mut chart = ChartBuilder::on(&root)
         .caption(fn_str, ("sans-serrif", 40f64 * res_mult))
         .x_label_area_size((10f64 * res_mult) as i32)
-        .y_label_area_size((30f64 * res_mult) as i32)
+        .y_label_area_size((25f64 * res_mult) as i32)
         .build_cartesian_2d(x_min as f64..x_max as f64, y_min as f64..y_max as f64)?;
 
     chart
         .configure_mesh()
         .label_style(("sans-serif", (18f64 * res_mult)).into_font())
-        .x_labels(31) // Número de labels no eixo X (-10 a 10, incrementando de 1 em 1)
-        .y_labels(31) // Número de labels no eixo Y (-10 a 200, incrementando de 10 em 10)
+        .x_labels(usize::min(31, (&x_max - &x_min + 1) as usize)) // Número de labels no eixo X (-10 a 10, incrementando de 1 em 1)
+        .y_labels(usize::min(31, (&y_max - &y_min + 1) as usize)) // Número de labels no eixo Y (-10 a 200, incrementando de 10 em 10)
         .x_label_formatter(&|v| format!("{:.0}", v)) // Formata para inteiro
         .y_label_formatter(&|v| format!("{:.0}", v))
         .axis_style(ShapeStyle {
             color: RGBAColor(0, 0, 0, 1.0),
             filled: false,
-            // stroke_width: u32::max(1u32, (1f64 * res_mult) as u32),
-            stroke_width: 2u32,
+            stroke_width: u32::max(2u32, (1f64 * res_mult) as u32),
+            // stroke_width: 2u32,
         })
         .max_light_lines(1)
         .bold_line_style(ShapeStyle {
             color: RGBAColor(20, 20, 60, 0.55),
             filled: false,
-            // stroke_width: u32::max(1u32, (1f64 * res_mult) as u32),
-            stroke_width: 2u32,
+            stroke_width: u32::max(1u32, (0.5f64 * res_mult) as u32),
+            // stroke_width: 2u32,
         })
         .draw()?;
 
@@ -269,8 +271,8 @@ fn draw_plot_x640y480(
     let xy_axis_style: ShapeStyle = ShapeStyle {
         color: RGBAColor(0, 0, 0, 1.0),
         filled: false,
-        // stroke_width: u32::max(1u32, (2f64 * res_mult) as u32),
-        stroke_width: 3u32,
+        stroke_width: u32::max(2u32, (1f64 * res_mult) as u32),
+        // stroke_width: 3u32,
     };
 
     chart.draw_series(LineSeries::new(x_axis, xy_axis_style.clone()))?;
