@@ -10,6 +10,23 @@ fn line1_style(res_mult: f64) -> ShapeStyle {
     }
 }
 
+fn f2_deg_to_range(
+    a: f64,
+    b: f64,
+    c: f64,
+    step: f64,
+    x_min: i32,
+    x_max: i32,
+) -> impl Iterator<Item = (f64, f64)> {
+    let x_min: f64 = x_min as f64 / step;
+    let x_max: f64 = x_max as f64 / step;
+    let range = (x_min as i32..=x_max as i32).map(move |i| {
+        let x: f64 = i as f64 * step;
+        (x, a * x.powf(2.0) + b * x + c)
+    });
+    range
+}
+
 fn f3_deg_to_range(
     a: f64,
     b: f64,
@@ -21,7 +38,6 @@ fn f3_deg_to_range(
 ) -> impl Iterator<Item = (f64, f64)> {
     let x_min: f64 = x_min as f64 / step;
     let x_max: f64 = x_max as f64 / step;
-
     let range = (x_min as i32..=x_max as i32).map(move |i| {
         let x: f64 = i as f64 * step;
         (x, a * x.powf(3.0) + b * x.powf(2.0) + c * x + d)
@@ -29,22 +45,42 @@ fn f3_deg_to_range(
     range
 }
 
-fn f2_deg_to_range(
+pub fn f2_deg(
     a: f64,
     b: f64,
     c: f64,
     step: f64,
     x_min: i32,
     x_max: i32,
-) -> impl Iterator<Item = (f64, f64)> {
-    let x_min: f64 = x_min as f64 / step;
-    let x_max: f64 = x_max as f64 / step;
+    y_min: i32,
+    y_max: i32,
+    res_mult: f64,
+) -> () {
+    // Função de segundo grau
 
-    let range = (x_min as i32..=x_max as i32).map(move |i| {
-        let x: f64 = i as f64 * step;
-        (x, a * x.powf(2.0) + b * x + c)
-    });
-    range
+    let range = f2_deg_to_range(a, b, c, step, x_min, x_max);
+    let range_style: ShapeStyle = line1_style(res_mult);
+
+    let mut fn_str: String = format!("{a}x²");
+
+    if b != 0.0 {
+        fn_str = format!("{fn_str} + {b}x")
+    }
+    if c != 0.0 {
+        fn_str = format!("{fn_str} + {c}")
+    }
+
+    let _ = draw_plot_x640y480(
+        x_min,
+        x_max,
+        y_min,
+        y_max,
+        range,
+        range_style,
+        fn_str,
+        res_mult,
+    );
+    // chart.draw_series(LineSeries::new(range, line1_style.clone()))?;
 }
 
 pub fn f3_deg(
@@ -80,6 +116,46 @@ pub fn f3_deg(
         y_min,
         y_max,
         range,
+        range_style,
+        fn_str,
+        res_mult,
+    );
+}
+
+pub fn f2_deg_easy(a: f64, b: f64, c: f64, x_min: i32, x_max: i32, res_mult: f64) {
+    let range = f2_deg_to_range(a, b, c, 0.01f64, x_min, x_max);
+    let range_style = line1_style(res_mult);
+
+    let mut fn_str: String = format!("{a}x²");
+
+    if b != 0.0 {
+        fn_str = format!("{fn_str} + {b}x")
+    }
+    if c != 0.0 {
+        fn_str = format!("{fn_str} + {c}")
+    }
+
+    let coll: Vec<_> = range.collect();
+
+    let mut y_min: f64 = 5f64;
+    let mut y_max: f64 = -5f64;
+    for (_, y) in &coll {
+        if y < &y_min {
+            y_min = *y;
+        }
+        if y > &y_max {
+            y_max = *y;
+        }
+    }
+    let diff: f64 = y_max - y_min;
+    y_min -= f64::max(diff * 0.1, 1.0);
+    y_max += f64::max(diff * 0.1, 1.0);
+    let _ = draw_plot_x640y480(
+        x_min,
+        x_max,
+        y_min as i32,
+        y_max as i32,
+        coll.into_iter(),
         range_style,
         fn_str,
         res_mult,
@@ -127,84 +203,6 @@ pub fn f3_deg_easy(a: f64, b: f64, c: f64, d: f64, x_min: i32, x_max: i32, res_m
         fn_str,
         res_mult,
     );
-}
-
-pub fn f2_deg_easy(a: f64, b: f64, c: f64, x_min: i32, x_max: i32, res_mult: f64) {
-    let range = f2_deg_to_range(a, b, c, 0.01f64, x_min, x_max);
-    let range_style = line1_style(res_mult);
-
-    let mut fn_str: String = format!("{a}x²");
-
-    if b != 0.0 {
-        fn_str = format!("{fn_str} + {b}x")
-    }
-    if c != 0.0 {
-        fn_str = format!("{fn_str} + {c}")
-    }
-
-    let coll: Vec<_> = range.collect();
-
-    let mut y_min: f64 = 5f64;
-    let mut y_max: f64 = -5f64;
-    for (_, y) in &coll {
-        if y < &y_min {
-            y_min = *y;
-        }
-        if y > &y_max {
-            y_max = *y;
-        }
-    }
-    let diff: f64 = y_max - y_min;
-    y_min -= f64::max(diff * 0.1, 1.0);
-    y_max += f64::max(diff * 0.1, 1.0);
-    let _ = draw_plot_x640y480(
-        x_min,
-        x_max,
-        y_min as i32,
-        y_max as i32,
-        coll.into_iter(),
-        range_style,
-        fn_str,
-        res_mult,
-    );
-}
-
-pub fn f2_deg(
-    a: f64,
-    b: f64,
-    c: f64,
-    step: f64,
-    x_min: i32,
-    x_max: i32,
-    y_min: i32,
-    y_max: i32,
-    res_mult: f64,
-) -> () {
-    // Função de segundo grau
-
-    let range = f2_deg_to_range(a, b, c, step, x_min, x_max);
-    let range_style: ShapeStyle = line1_style(res_mult);
-
-    let mut fn_str: String = format!("{a}x²");
-
-    if b != 0.0 {
-        fn_str = format!("{fn_str} + {b}x")
-    }
-    if c != 0.0 {
-        fn_str = format!("{fn_str} + {c}")
-    }
-
-    let _ = draw_plot_x640y480(
-        x_min,
-        x_max,
-        y_min,
-        y_max,
-        range,
-        range_style,
-        fn_str,
-        res_mult,
-    );
-    // chart.draw_series(LineSeries::new(range, line1_style.clone()))?;
 }
 
 fn draw_plot_x640y480(
